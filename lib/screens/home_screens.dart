@@ -23,9 +23,20 @@ class HomeScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
                   height: 200,
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: Text(
+                    "Popular Movies",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: makeList(snapshot),
@@ -64,6 +75,8 @@ class HomeScreen extends StatelessWidget {
                   ]),
               child: Image.network(
                 imageUrl,
+                height: 200,
+                fit: BoxFit.cover,
                 headers: const {
                   'Referer': 'https://image.tmdb.org/t/p/w500',
                 },
