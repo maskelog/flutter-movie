@@ -8,6 +8,8 @@ class HomeScreen extends StatelessWidget {
   final Future<List<MoviesModel>> popularMovies = ApiService.getMovies();
   final Future<List<MoviesModel>> nowPlayingMovies =
       ApiService.getNowPlayingMovies();
+  final Future<List<MoviesModel>> comingSoonMovies =
+      ApiService.getComingSoonMovies();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,17 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             FutureSection(moviesFuture: nowPlayingMovies),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+              child: Text(
+                "Coming Soon",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            FutureSection(moviesFuture: comingSoonMovies),
           ],
         ),
       ),

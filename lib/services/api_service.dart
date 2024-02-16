@@ -16,6 +16,10 @@ class ApiService {
     return _fetchMoviesFromEndpoint(nowplaying);
   }
 
+  static Future<List<MoviesModel>> getComingSoonMovies() async {
+    return _fetchMoviesFromEndpoint(comingsoon);
+  }
+
   // 공통로직 처리 private 메서드
   static Future<List<MoviesModel>> _fetchMoviesFromEndpoint(
       String endpoint) async {
