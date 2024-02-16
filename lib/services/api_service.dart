@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 class ApiService {
   static const String baseUrl = "https://movies-api.nomadcoders.workers.dev";
   static const String popular = "popular";
+  static const String nowplaying = "now-playing";
+  static const String comingsoon = "coming-soon";
 
   static Future<List<MoviesModel>> getMovies() async {
     final Uri url = Uri.parse('$baseUrl/$popular');
