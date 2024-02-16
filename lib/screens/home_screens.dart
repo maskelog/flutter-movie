@@ -5,50 +5,68 @@ import 'package:flutter_movie/services/api_service.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final Future<List<MoviesModel>> movies = ApiService.getMovies();
+  final Future<List<MoviesModel>> popularMovies = ApiService.getMovies();
+  final Future<List<MoviesModel>> nowPlayingMovies =
+      ApiService.getNowPlayingMovies();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "TOP Movies",
-          style: TextStyle(
-            fontSize: 24,
-          ),
+        title: const Text("TOP Movies"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+              child: Text(
+                "Popular Movies",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            FutureSection(moviesFuture: popularMovies),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+              child: Text(
+                "Now Playing",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            FutureSection(moviesFuture: nowPlayingMovies),
+          ],
         ),
       ),
-      body: FutureBuilder(
-        future: movies,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 200,
-                ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Text(
-                    "Popular Movies",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: makeList(snapshot),
-                )
-              ],
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
+    );
+  }
+}
+
+// FutureBuilder와 ListView를 포함하는 재사용 가능한 위젯
+class FutureSection extends StatelessWidget {
+  final Future<List<MoviesModel>> moviesFuture;
+
+  const FutureSection({Key? key, required this.moviesFuture}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<MoviesModel>>(
+      future: moviesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return SizedBox(
+            height: 280,
+            child: makeList(snapshot),
           );
-        },
-      ),
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 
@@ -64,40 +82,26 @@ class HomeScreen extends StatelessWidget {
           children: [
             Container(
               width: 250,
+              height: 200,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 15,
-                        offset: const Offset(10, 15),
-                        color: Colors.black.withOpacity(0.5))
-                  ]),
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Image.network(
                 imageUrl,
-                height: 200,
                 fit: BoxFit.cover,
-                headers: const {
-                  'Referer': 'https://image.tmdb.org/t/p/w500',
-                },
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 10),
             Text(
               movie.originalTitle,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            )
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         );
       },
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 40,
-      ),
+      separatorBuilder: (context, index) => const SizedBox(width: 20),
     );
   }
 }

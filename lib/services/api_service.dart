@@ -9,7 +9,17 @@ class ApiService {
   static const String comingsoon = "coming-soon";
 
   static Future<List<MoviesModel>> getMovies() async {
-    final Uri url = Uri.parse('$baseUrl/$popular');
+    return _fetchMoviesFromEndpoint(popular);
+  }
+
+  static Future<List<MoviesModel>> getNowPlayingMovies() async {
+    return _fetchMoviesFromEndpoint(nowplaying);
+  }
+
+  // 공통로직 처리 private 메서드
+  static Future<List<MoviesModel>> _fetchMoviesFromEndpoint(
+      String endpoint) async {
+    final Uri url = Uri.parse('$baseUrl/$endpoint');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -18,7 +28,9 @@ class ApiService {
       MoviesResponse moviesResponse = MoviesResponse.fromJson(parsedJson);
 
       return moviesResponse.movies;
+    } else {
+      throw Exception(
+          'Failed to load movies from $endpoint with status code: ${response.statusCode}');
     }
-    throw Error();
   }
 }
