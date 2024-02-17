@@ -31,18 +31,18 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            FutureSection(moviesFuture: popularMovies),
+            FutureSection(moviesFuture: popularMovies, imageWidth: 300.0),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
               child: Text(
-                "Now Playing",
+                "Now in Cinemas",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            FutureSection(moviesFuture: nowPlayingMovies),
+            FutureSection(moviesFuture: nowPlayingMovies, imageWidth: 200.0),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
               child: Text(
@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            FutureSection(moviesFuture: comingSoonMovies),
+            FutureSection(moviesFuture: comingSoonMovies, imageWidth: 150.0),
           ],
         ),
       ),
@@ -64,8 +64,11 @@ class HomeScreen extends StatelessWidget {
 // FutureBuilder와 ListView를 포함하는 재사용 가능한 위젯
 class FutureSection extends StatelessWidget {
   final Future<List<MoviesModel>> moviesFuture;
+  final double imageWidth;
 
-  const FutureSection({Key? key, required this.moviesFuture}) : super(key: key);
+  const FutureSection(
+      {Key? key, required this.moviesFuture, this.imageWidth = 250.0})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class FutureSection extends StatelessWidget {
         return Column(
           children: [
             Container(
-              width: 250,
+              width: imageWidth,
               height: 200,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
