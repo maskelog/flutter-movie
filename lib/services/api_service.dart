@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_movie/models/detail_model.dart';
 import 'package:flutter_movie/models/popular_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,7 +21,19 @@ class ApiService {
     return _fetchMoviesFromEndpoint(comingsoon);
   }
 
-  // 공통로직 처리 private 메서드
+  static Future<MovieDetailModel> getMovieDetails(int movieId) async {
+    final Uri url = Uri.parse('$baseUrl/movie?id=$movieId');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = json.decode(response.body);
+      return MovieDetailModel.fromJson(jsonData);
+    } else {
+      throw Exception('Failed to load movie details');
+    }
+  }
+
+  // 공통 로직 처리를 위한 private 메서드
   static Future<List<MoviesModel>> _fetchMoviesFromEndpoint(
       String endpoint) async {
     final Uri url = Uri.parse('$baseUrl/$endpoint');

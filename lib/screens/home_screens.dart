@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/models/popular_model.dart';
+import 'package:flutter_movie/screens/Detail_screen.dart';
 import 'package:flutter_movie/services/api_service.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("TOP Movies"),
+        toolbarHeight: 50,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -94,27 +95,38 @@ class FutureSection extends StatelessWidget {
       itemBuilder: (context, index) {
         var movie = snapshot.data![index];
         String imageUrl = 'https://image.tmdb.org/t/p/w500${movie.posterPath}';
-        return Column(
-          children: [
-            Container(
-              width: imageWidth,
-              height: 200,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieDetailScreen(movieId: movie.id),
               ),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
+            );
+          },
+          child: Column(
+            children: [
+              Container(
+                width: imageWidth,
+                height: 200,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              movie.originalTitle,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+              const SizedBox(height: 10),
+              Text(
+                movie.originalTitle,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         );
       },
       separatorBuilder: (context, index) => const SizedBox(width: 20),
